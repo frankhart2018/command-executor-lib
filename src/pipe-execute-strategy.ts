@@ -21,7 +21,7 @@ class PipeExecuteStrategy implements ExecuteStrategy {
 
   private getFileLastModified = (filePath: string): number => {
     if (!existsSync(filePath)) {
-      throw new Error("File does not exist!");
+      return -1;
     }
     let stats = statSync(filePath);
     return stats.mtimeMs;

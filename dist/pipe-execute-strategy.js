@@ -11,7 +11,7 @@ class PipeExecuteStrategy {
     constructor() {
         this.getFileLastModified = (filePath) => {
             if (!(0, fs_1.existsSync)(filePath)) {
-                throw new Error("File does not exist!");
+                return -1;
             }
             let stats = (0, fs_1.statSync)(filePath);
             return stats.mtimeMs;
