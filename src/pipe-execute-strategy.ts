@@ -39,7 +39,7 @@ class PipeExecuteStrategy implements ExecuteStrategy {
       if (diff <= PIPE_OUTPUT_CACHE_MINUTES) {
         cachedOutput = new CommandOutput(
           CommandOutputType.Success,
-          readFileSync(filePath).toString(),
+          readFileSync(filePath).toString()
         );
       }
     }
@@ -112,7 +112,6 @@ class PipeExecuteStrategy implements ExecuteStrategy {
     };
 
     withOutputPath = (outputPath: string): this => {
-      this.checkPath(outputPath, "Output path");
       this.container.outputPath = outputPath;
       return this;
     };

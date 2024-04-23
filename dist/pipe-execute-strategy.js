@@ -88,7 +88,6 @@ PipeExecuteStrategy.PipeExecuteStrategyBuilder = class {
             return this;
         };
         this.withOutputPath = (outputPath) => {
-            this.checkPath(outputPath, "Output path");
             this.container.outputPath = outputPath;
             return this;
         };
