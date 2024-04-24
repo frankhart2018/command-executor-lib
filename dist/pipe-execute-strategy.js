@@ -89,6 +89,7 @@ PipeExecuteStrategy.PipeExecuteStrategyBuilder = class {
         };
         this.withOutputPath = (outputPath) => {
             this.container.outputPath = outputPath;
+            this.container.commandSerializer = new command_serializer_1.JsonSerializer(outputPath);
             return this;
         };
         this.build = () => {

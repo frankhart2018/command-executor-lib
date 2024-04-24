@@ -113,6 +113,7 @@ class PipeExecuteStrategy implements ExecuteStrategy {
 
     withOutputPath = (outputPath: string): this => {
       this.container.outputPath = outputPath;
+      this.container.commandSerializer = new JsonSerializer(outputPath);
       return this;
     };
 
