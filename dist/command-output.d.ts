@@ -1,6 +1,7 @@
 declare enum CommandOutputType {
     Success = 0,
-    Error = 1
+    Error = 1,
+    TimedOut = 2
 }
 declare class CommandOutput {
     type: CommandOutputType;

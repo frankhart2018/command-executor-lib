@@ -1,6 +1,7 @@
 enum CommandOutputType {
   Success = 0,
   Error = 1,
+  TimedOut = 2,
 }
 
 class CommandOutput {

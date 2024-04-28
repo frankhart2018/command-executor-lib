@@ -5,8 +5,8 @@ var CommandOutputType;
 (function (CommandOutputType) {
     CommandOutputType[CommandOutputType["Success"] = 0] = "Success";
     CommandOutputType[CommandOutputType["Error"] = 1] = "Error";
-})(CommandOutputType || (CommandOutputType = {}));
-exports.CommandOutputType = CommandOutputType;
+    CommandOutputType[CommandOutputType["TimedOut"] = 2] = "TimedOut";
+})(CommandOutputType || (exports.CommandOutputType = CommandOutputType = {}));
 class CommandOutput {
     constructor(type, value) {
         this.type = type;

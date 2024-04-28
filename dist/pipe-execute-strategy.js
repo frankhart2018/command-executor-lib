@@ -7,6 +7,7 @@ const command_serializer_1 = require("./command-serializer");
 const GENERIC_OUTPUT_PATH = "output.txt";
 const PIPE_OUTPUT_CACHE_MINUTES = 3;
 const PIPE_WAIT_SLEEP_TIME = 100; // 100ms
+const DEFAULT_EXECUTION_TIMEOUT = 10000; // 10_000ms = 10s
 class PipeExecuteStrategy {
     constructor() {
         this.getFileLastModified = (filePath) => {
@@ -34,6 +35,37 @@ class PipeExecuteStrategy {
             const start = Date.now();
             while (Date.now() - start < ms) { }
         };
+        this.waitForOutputWithTimeout = (lastModified) => {
+            const start = Date.now();
+            let didTimeout = false;
+            const isTimedOut = () => {
+                const now = Date.now();
+                const diff = now - start;
+                const result = diff > this.executionTimeout;
+                if (result) {
+                    didTimeout = true;
+                }
+                return result;
+            };
+            // If output path does not exist, wait for it to be created
+            // Edge case, will happen only first time
+            if (!(0, fs_1.existsSync)(this.outputPath)) {
+                while (!(0, fs_1.existsSync)(this.outputPath) && !isTimedOut()) {
+                    this.sleep(PIPE_WAIT_SLEEP_TIME);
+                }
+            }
+            else {
+                // Otherwise wait for the file to be modified
+                while (true && !isTimedOut()) {
+                    const lastModifiedUpdated = this.getFileLastModified(this.outputPath);
+                    if (lastModified !== lastModifiedUpdated) {
+                        break;
+                    }
+                    this.sleep(PIPE_WAIT_SLEEP_TIME);
+                }
+            }
+            return didTimeout;
+        };
         this.execute = (cmd) => {
             const cachedOutput = this.useCache
                 ? this.getCachedOutput(this.outputPath)
@@ -42,22 +74,9 @@ class PipeExecuteStrategy {
                 return cachedOutput;
             (0, fs_1.writeFileSync)(this.pipePath, this.commandSerializer.serialize(cmd));
             const lastModified = this.getFileLastModified(this.outputPath);
-            // If output path does not exist, wait for it to be created
-            // Edge case, will happen only first time
-            if (!(0, fs_1.existsSync)(this.outputPath)) {
-                while (!(0, fs_1.existsSync)(this.outputPath)) {
-                    this.sleep(PIPE_WAIT_SLEEP_TIME);
-                }
-            }
-            else {
-                // Otherwise wait for the file to be modified
-                while (true) {
-                    const lastModifiedUpdated = this.getFileLastModified(this.outputPath);
-                    if (lastModified !== lastModifiedUpdated) {
-                        break;
-                    }
-                    this.sleep(PIPE_WAIT_SLEEP_TIME);
-                }
+            const didTimeout = this.waitForOutputWithTimeout(lastModified);
+            if (didTimeout) {
+                return new command_output_1.CommandOutput(command_output_1.CommandOutputType.TimedOut, `${cmd} timed out after ${this.executionTimeout}ms`);
             }
             const outputData = (0, fs_1.readFileSync)(this.outputPath).toString();
             return new command_output_1.CommandOutput(command_output_1.CommandOutputType.Success, outputData);
@@ -65,6 +84,7 @@ class PipeExecuteStrategy {
         this.useCache = false;
         this.outputPath = GENERIC_OUTPUT_PATH;
         this.commandSerializer = new command_serializer_1.JsonSerializer(this.outputPath);
+        this.executionTimeout = DEFAULT_EXECUTION_TIMEOUT;
     }
 }
 exports.PipeExecuteStrategy = PipeExecuteStrategy;
@@ -90,6 +110,10 @@ PipeExecuteStrategy.PipeExecuteStrategyBuilder = class {
         this.withOutputPath = (outputPath) => {
             this.container.outputPath = outputPath;
             this.container.commandSerializer = new command_serializer_1.JsonSerializer(outputPath);
+            return this;
+        };
+        this.withExecutionTimeout = (executionTimeout) => {
+            this.container.executionTimeout = executionTimeout;
             return this;
         };
         this.build = () => {
