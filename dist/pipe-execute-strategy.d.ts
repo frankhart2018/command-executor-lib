@@ -6,10 +6,12 @@ declare class PipeExecuteStrategy implements ExecuteStrategy {
     protected pipePath: string;
     protected outputPath: string;
     protected commandSerializer: CommandSerializer;
+    protected executionTimeout: number;
     constructor();
     private getFileLastModified;
     private getCachedOutput;
     private sleep;
+    private waitForOutputWithTimeout;
     execute: (cmd: string) => CommandOutput;
     static builder: () => {
         container: PipeExecuteStrategy;
@@ -17,6 +19,7 @@ declare class PipeExecuteStrategy implements ExecuteStrategy {
         withPipePath: (pipePath: string) => this;
         withCache: (useCache: boolean) => this;
         withOutputPath: (outputPath: string) => this;
+        withExecutionTimeout: (executionTimeout: number) => this;
         build: () => ExecuteStrategy;
     };
     static PipeExecuteStrategyBuilder: {
@@ -26,6 +29,7 @@ declare class PipeExecuteStrategy implements ExecuteStrategy {
             withPipePath: (pipePath: string) => this;
             withCache: (useCache: boolean) => this;
             withOutputPath: (outputPath: string) => this;
+            withExecutionTimeout: (executionTimeout: number) => this;
             build: () => ExecuteStrategy;
         };
     };
