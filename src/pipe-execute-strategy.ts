@@ -22,6 +22,31 @@ class PipeExecuteStrategy implements ExecuteStrategy {
     this.executionTimeout = DEFAULT_EXECUTION_TIMEOUT;
   }
 
+  setUseCache = (useCache: boolean) => {
+    this.useCache = useCache;
+  };
+
+  setPipePath = (pipePath: string) => {
+    this.pipePath = pipePath;
+  };
+
+  setOutputPath = (outputPath: string) => {
+    this.outputPath = outputPath;
+    this.commandSerializer = new JsonSerializer(outputPath);
+  };
+
+  setExecutionTimeout = (executionTimeout: number) => {
+    this.executionTimeout = executionTimeout;
+  };
+
+  setCommandSerializer = (commandSerializer: CommandSerializer) => {
+    this.commandSerializer = commandSerializer;
+  }
+
+  getPipePath = (): string => {
+    return this.pipePath;
+  }
+
   private getFileLastModified = (filePath: string): number => {
     if (!existsSync(filePath)) {
       return -1;
@@ -108,52 +133,52 @@ class PipeExecuteStrategy implements ExecuteStrategy {
   };
 
   static builder = () => {
-    return new PipeExecuteStrategy.PipeExecuteStrategyBuilder();
-  };
-
-  static PipeExecuteStrategyBuilder = class {
-    container: PipeExecuteStrategy;
-
-    constructor() {
-      this.container = new PipeExecuteStrategy();
-    }
-
-    checkPath = (path: string, fileName: string): void => {
-      if (!existsSync(path)) {
-        throw new Error(`${fileName} does not exist!`);
-      }
-    };
-
-    withPipePath = (pipePath: string): this => {
-      this.checkPath(pipePath, "Pipe path");
-      this.container.pipePath = pipePath;
-      return this;
-    };
-
-    withCache = (useCache: boolean): this => {
-      this.container.useCache = useCache;
-      return this;
-    };
-
-    withOutputPath = (outputPath: string): this => {
-      this.container.outputPath = outputPath;
-      this.container.commandSerializer = new JsonSerializer(outputPath);
-      return this;
-    };
-
-    withExecutionTimeout = (executionTimeout: number): this => {
-      this.container.executionTimeout = executionTimeout;
-      return this;
-    };
-
-    build = (): ExecuteStrategy => {
-      if (this.container.pipePath === undefined) {
-        throw new Error("Pipe path is required!");
-      }
-
-      return this.container;
-    };
+    return new PipeExecuteStrategyBuilder();
   };
 }
+
+class PipeExecuteStrategyBuilder {
+  container: PipeExecuteStrategy;
+
+  constructor() {
+    this.container = new PipeExecuteStrategy();
+  }
+
+  checkPath = (path: string, fileName: string): void => {
+    if (!existsSync(path)) {
+      throw new Error(`${fileName} does not exist!`);
+    }
+  };
+
+  withPipePath = (pipePath: string): any => {
+    this.checkPath(pipePath, "Pipe path");
+    this.container.setPipePath(pipePath);
+    return this;
+  };
+
+  withCache = (useCache: boolean): any => {
+    this.container.setUseCache(useCache);
+    return this;
+  };
+
+  withOutputPath = (outputPath: string): any => {
+    this.container.setOutputPath(outputPath);
+    this.container.setCommandSerializer(new JsonSerializer(outputPath));
+    return this;
+  };
+
+  withExecutionTimeout = (executionTimeout: number): any => {
+    this.container.setExecutionTimeout(executionTimeout);
+    return this;
+  };
+
+  build = (): ExecuteStrategy => {
+    if (this.container.getPipePath() === undefined) {
+      throw new Error("Pipe path is required!");
+    }
+
+    return this.container;
+  };
+};
 
 export { PipeExecuteStrategy };

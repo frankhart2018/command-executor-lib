@@ -4,3 +4,4 @@ declare class RegularExecuteStrategy implements ExecuteStrategy {
     execute: (cmd: string) => CommandOutput;
 }
 export { RegularExecuteStrategy };
+//# sourceMappingURL=regular-execute-strategy.d.ts.map
