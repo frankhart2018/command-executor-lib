@@ -9,3 +9,4 @@ declare class CommandOutput {
     constructor(type: CommandOutputType, value: string);
 }
 export { CommandOutput, CommandOutputType };
+//# sourceMappingURL=command-output.d.ts.map

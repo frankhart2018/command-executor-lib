@@ -16,22 +16,23 @@ declare class PipeExecuteStrategy implements ExecuteStrategy {
     static builder: () => {
         container: PipeExecuteStrategy;
         checkPath: (path: string, fileName: string) => void;
-        withPipePath: (pipePath: string) => this;
-        withCache: (useCache: boolean) => this;
-        withOutputPath: (outputPath: string) => this;
-        withExecutionTimeout: (executionTimeout: number) => this;
+        withPipePath: (pipePath: string) => any;
+        withCache: (useCache: boolean) => any;
+        withOutputPath: (outputPath: string) => any;
+        withExecutionTimeout: (executionTimeout: number) => any;
         build: () => ExecuteStrategy;
     };
     static PipeExecuteStrategyBuilder: {
         new (): {
             container: PipeExecuteStrategy;
             checkPath: (path: string, fileName: string) => void;
-            withPipePath: (pipePath: string) => this;
-            withCache: (useCache: boolean) => this;
-            withOutputPath: (outputPath: string) => this;
-            withExecutionTimeout: (executionTimeout: number) => this;
+            withPipePath: (pipePath: string) => any;
+            withCache: (useCache: boolean) => any;
+            withOutputPath: (outputPath: string) => any;
+            withExecutionTimeout: (executionTimeout: number) => any;
             build: () => ExecuteStrategy;
         };
     };
 }
 export { PipeExecuteStrategy };
+//# sourceMappingURL=pipe-execute-strategy.d.ts.map

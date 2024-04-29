@@ -7,3 +7,4 @@ declare class JsonSerializer implements CommandSerializer {
     serialize: (command: string) => string;
 }
 export { CommandSerializer, JsonSerializer };
+//# sourceMappingURL=command-serializer.d.ts.map
