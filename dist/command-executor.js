@@ -2,11 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandExecutor = void 0;
 class CommandExecutor {
-    constructor(cmd, strategy) {
-        this.execute = () => {
-            return this.strategy.execute(this.cmd);
+    constructor(strategy) {
+        this.execute = (cmd) => {
+            return this.strategy.execute(cmd);
         };
-        this.cmd = cmd;
         this.strategy = strategy;
     }
 }

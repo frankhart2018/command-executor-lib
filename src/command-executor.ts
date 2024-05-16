@@ -1,16 +1,14 @@
 import { ExecuteStrategy } from "./execute-strategy";
 
 class CommandExecutor {
-  cmd: string;
   strategy: ExecuteStrategy;
 
-  constructor(cmd: string, strategy: ExecuteStrategy) {
-    this.cmd = cmd;
+  constructor(strategy: ExecuteStrategy) {
     this.strategy = strategy;
   }
 
-  execute = () => {
-    return this.strategy.execute(this.cmd);
+  execute = (cmd: string) => {
+    return this.strategy.execute(cmd);
   };
 }
 

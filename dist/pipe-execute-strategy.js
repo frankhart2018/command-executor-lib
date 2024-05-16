@@ -10,6 +10,25 @@ const PIPE_WAIT_SLEEP_TIME = 100; // 100ms
 const DEFAULT_EXECUTION_TIMEOUT = 10000; // 10_000ms = 10s
 class PipeExecuteStrategy {
     constructor() {
+        this.setUseCache = (useCache) => {
+            this.useCache = useCache;
+        };
+        this.setPipePath = (pipePath) => {
+            this.pipePath = pipePath;
+        };
+        this.setOutputPath = (outputPath) => {
+            this.outputPath = outputPath;
+            this.commandSerializer = new command_serializer_1.JsonSerializer(outputPath);
+        };
+        this.setExecutionTimeout = (executionTimeout) => {
+            this.executionTimeout = executionTimeout;
+        };
+        this.setCommandSerializer = (commandSerializer) => {
+            this.commandSerializer = commandSerializer;
+        };
+        this.getPipePath = () => {
+            return this.pipePath;
+        };
         this.getFileLastModified = (filePath) => {
             if (!(0, fs_1.existsSync)(filePath)) {
                 return -1;
@@ -89,9 +108,9 @@ class PipeExecuteStrategy {
 }
 exports.PipeExecuteStrategy = PipeExecuteStrategy;
 PipeExecuteStrategy.builder = () => {
-    return new PipeExecuteStrategy.PipeExecuteStrategyBuilder();
+    return new PipeExecuteStrategyBuilder();
 };
-PipeExecuteStrategy.PipeExecuteStrategyBuilder = class {
+class PipeExecuteStrategyBuilder {
     constructor() {
         this.checkPath = (path, fileName) => {
             if (!(0, fs_1.existsSync)(path)) {
@@ -100,28 +119,29 @@ PipeExecuteStrategy.PipeExecuteStrategyBuilder = class {
         };
         this.withPipePath = (pipePath) => {
             this.checkPath(pipePath, "Pipe path");
-            this.container.pipePath = pipePath;
+            this.container.setPipePath(pipePath);
             return this;
         };
         this.withCache = (useCache) => {
-            this.container.useCache = useCache;
+            this.container.setUseCache(useCache);
             return this;
         };
         this.withOutputPath = (outputPath) => {
-            this.container.outputPath = outputPath;
-            this.container.commandSerializer = new command_serializer_1.JsonSerializer(outputPath);
+            this.container.setOutputPath(outputPath);
+            this.container.setCommandSerializer(new command_serializer_1.JsonSerializer(outputPath));
             return this;
         };
         this.withExecutionTimeout = (executionTimeout) => {
-            this.container.executionTimeout = executionTimeout;
+            this.container.setExecutionTimeout(executionTimeout);
             return this;
         };
         this.build = () => {
-            if (this.container.pipePath === undefined) {
+            if (this.container.getPipePath() === undefined) {
                 throw new Error("Pipe path is required!");
             }
             return this.container;
         };
         this.container = new PipeExecuteStrategy();
     }
-};
+}
+;
