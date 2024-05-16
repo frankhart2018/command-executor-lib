@@ -8,31 +8,28 @@ declare class PipeExecuteStrategy implements ExecuteStrategy {
     protected commandSerializer: CommandSerializer;
     protected executionTimeout: number;
     constructor();
+    setUseCache: (useCache: boolean) => void;
+    setPipePath: (pipePath: string) => void;
+    setOutputPath: (outputPath: string) => void;
+    setExecutionTimeout: (executionTimeout: number) => void;
+    setCommandSerializer: (commandSerializer: CommandSerializer) => void;
+    getPipePath: () => string;
     private getFileLastModified;
     private getCachedOutput;
     private sleep;
     private waitForOutputWithTimeout;
     execute: (cmd: string) => CommandOutput;
-    static builder: () => {
-        container: PipeExecuteStrategy;
-        checkPath: (path: string, fileName: string) => void;
-        withPipePath: (pipePath: string) => any;
-        withCache: (useCache: boolean) => any;
-        withOutputPath: (outputPath: string) => any;
-        withExecutionTimeout: (executionTimeout: number) => any;
-        build: () => ExecuteStrategy;
-    };
-    static PipeExecuteStrategyBuilder: {
-        new (): {
-            container: PipeExecuteStrategy;
-            checkPath: (path: string, fileName: string) => void;
-            withPipePath: (pipePath: string) => any;
-            withCache: (useCache: boolean) => any;
-            withOutputPath: (outputPath: string) => any;
-            withExecutionTimeout: (executionTimeout: number) => any;
-            build: () => ExecuteStrategy;
-        };
-    };
+    static builder: () => PipeExecuteStrategyBuilder;
+}
+declare class PipeExecuteStrategyBuilder {
+    container: PipeExecuteStrategy;
+    constructor();
+    checkPath: (path: string, fileName: string) => void;
+    withPipePath: (pipePath: string) => any;
+    withCache: (useCache: boolean) => any;
+    withOutputPath: (outputPath: string) => any;
+    withExecutionTimeout: (executionTimeout: number) => any;
+    build: () => ExecuteStrategy;
 }
 export { PipeExecuteStrategy };
 //# sourceMappingURL=pipe-execute-strategy.d.ts.map
