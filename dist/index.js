@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CommandOutputType = exports.CommandExecutor = exports.RegularExecuteStrategy = exports.PipeExecuteStrategy = void 0;
+exports.CommandOutput = exports.CommandOutputType = exports.CommandExecutor = exports.RegularExecuteStrategy = exports.PipeExecuteStrategy = void 0;
 const pipe_execute_strategy_1 = require("./pipe-execute-strategy");
 Object.defineProperty(exports, "PipeExecuteStrategy", { enumerable: true, get: function () { return pipe_execute_strategy_1.PipeExecuteStrategy; } });
 const regular_execute_strategy_1 = require("./regular-execute-strategy");
@@ -9,3 +9,4 @@ const command_executor_1 = require("./command-executor");
 Object.defineProperty(exports, "CommandExecutor", { enumerable: true, get: function () { return command_executor_1.CommandExecutor; } });
 const command_output_1 = require("./command-output");
 Object.defineProperty(exports, "CommandOutputType", { enumerable: true, get: function () { return command_output_1.CommandOutputType; } });
+Object.defineProperty(exports, "CommandOutput", { enumerable: true, get: function () { return command_output_1.CommandOutput; } });
